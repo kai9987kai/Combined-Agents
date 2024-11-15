@@ -2,202 +2,210 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Enhanced Multi-Agent Simulation with Dynamic Attention and Q-Learning</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>Enhanced Multi-Agent Simulation with Threat Combat</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; overflow: hidden; }
-        #controls {
-            position: absolute; top: 10px; right: 10px; color: white; background: rgba(0, 0, 0, 0.7); padding: 10px; border-radius: 5px;
-        }
-        #controls label { display: block; margin-top: 10px; }
+        body { font-family: Arial, sans-serif; background-color: #fafafa; margin: 0; overflow: hidden; }
+        #controls { position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(0, 0, 0, 0.7); color: white; padding: 10px; border-radius: 5px; }
+        #controls label, #controls button { display: block; margin: 5px 0; }
     </style>
 </head>
 <body>
-<div id="controls">
-    <h3>Simulation Controls</h3>
-    <label>Agent Speed: <input type="range" id="agentSpeed" min="0.5" max="5" step="0.1" value="2"></label>
-    <label>Attention Scaling: <input type="range" id="attentionScale" min="0.1" max="2" step="0.1" value="1"></label>
-    <button id="resetSimulation">Reset Simulation</button>
-</div>
+    <div id="controls">
+        <label>Agent Speed:</label>
+        <input type="range" id="speedSlider" min="1" max="10" value="5">
+        <button onclick="resetSimulation()">Reset Simulation</button>
+    </div>
+    <canvas id="canvas"></canvas>
 
-<script>
-    let scene, camera, renderer, agents = [], obstacles = [], threats = [], energySources = [];
-    let agentSpeed = 2, attentionScale = 1;
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    // Initialize Three.js Scene
-    function initScene() {
-        scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(0, 0, 50);
-        renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-    }
+        // Simulation settings
+        const agentCount = 25; 
+        const obstacleCount = 50;
+        const threatCount = 10; // Increased threat count
+        const foodRespawnRate = 5000;
+        const threatRespawnRate = 7000;
+        const agentAttributes = {
+            maxSpeed: 5,
+            maxHealth: 120,
+            reproductionRate: 0.1,
+        };
 
-    class QLearningAgent {
-        constructor(id, speed) {
-            this.id = id;
-            this.speed = speed;
-            this.position = new THREE.Vector3(Math.random() * 40 - 20, Math.random() * 40 - 20, 0);
-            this.direction = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, 0).normalize();
-            this.dynamicAttentionScale = attentionScale;
-            this.energy = 100;
-            this.qTable = {}; // Placeholder for Q-learning table
+        const dynamicAttentionScale = 5;
 
-            // Visual Representation
-            this.mesh = new THREE.Mesh(
-                new THREE.SphereGeometry(0.5, 16, 16),
-                new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-            );
-            scene.add(this.mesh);
-        }
+        class Agent {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 3;
+                this.health = agentAttributes.maxHealth;
+                this.speed = Math.random() * agentAttributes.maxSpeed;
+                this.reproductionRate = agentAttributes.reproductionRate;
+                this.attentionScale = dynamicAttentionScale;
+                this.qTable = {}; 
+            }
 
-        senseEnvironment() {
-            let closestThreat = null, closestEnergySource = null;
-            let minThreatDist = Infinity, minEnergyDist = Infinity;
+            move() {
+                this.x += (Math.random() - 0.5) * this.speed;
+                this.y += (Math.random() - 0.5) * this.speed;
 
-            for (let threat of threats) {
-                const distance = this.position.distanceTo(threat.position);
-                if (distance < minThreatDist) {
-                    minThreatDist = distance;
-                    closestThreat = threat;
+                if (this.x < 0 || this.x > canvas.width) this.x = Math.max(0, Math.min(canvas.width, this.x));
+                if (this.y < 0 || this.y > canvas.height) this.y = Math.max(0, Math.min(canvas.height, this.y));
+            }
+
+            reproduce() {
+                if (Math.random() < this.reproductionRate) {
+                    return new Agent(this.x, this.y);
                 }
+                return null;
             }
 
-            for (let energy of energySources) {
-                const distance = this.position.distanceTo(energy.position);
-                if (distance < minEnergyDist) {
-                    minEnergyDist = distance;
-                    closestEnergySource = energy;
-                }
-            }
-
-            return { closestThreat, minThreatDist, closestEnergySource, minEnergyDist };
-        }
-
-        updatePosition() {
-            const { closestThreat, minThreatDist, closestEnergySource, minEnergyDist } = this.senseEnvironment();
-
-            // Avoid threats if close
-            if (closestThreat && minThreatDist < 5 * this.dynamicAttentionScale) {
-                this.direction.add(new THREE.Vector3(
-                    this.position.x - closestThreat.position.x,
-                    this.position.y - closestThreat.position.y,
-                    0
-                ).normalize());
-            }
-
-            // Move towards energy source if low on energy
-            if (this.energy < 50 && closestEnergySource && minEnergyDist < 20 * this.dynamicAttentionScale) {
-                this.direction.add(new THREE.Vector3(
-                    closestEnergySource.position.x - this.position.x,
-                    closestEnergySource.position.y - this.position.y,
-                    0
-                ).normalize());
-            }
-
-            // Move and update energy
-            this.position.add(this.direction.clone().multiplyScalar(this.speed));
-            this.mesh.position.copy(this.position);
-            this.energy -= 0.05 * this.speed;
-
-            this.checkEnergyReplenishment();
-            this.checkThreatCollision();
-            this.stayInBounds();
-        }
-
-        checkEnergyReplenishment() {
-            for (let i = energySources.length - 1; i >= 0; i--) {
-                if (this.position.distanceTo(energySources[i].position) < 1) {
-                    this.energy = Math.min(100, this.energy + 50);
-                    scene.remove(energySources[i].mesh);
-                    energySources.splice(i, 1);
-                    addEnergySource();
+            engageThreat(threat) {
+                const dx = threat.x - this.x;
+                const dy = threat.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < this.size + threat.size) {
+                    threat.health -= 10;
+                    if (threat.health <= 0) threat.despawn();
                 }
             }
         }
 
-        checkThreatCollision() {
-            for (let threat of threats) {
-                if (this.position.distanceTo(threat.position) < 1) {
-                    this.energy = 0;
-                    this.position.set(Math.random() * 40 - 20, Math.random() * 40 - 20, 0);
+        class Obstacle {
+            constructor(x, y, ageLimit) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 10 + 5;
+                this.ageLimit = ageLimit;
+                this.age = 0;
+            }
+
+            update() {
+                this.age += 1;
+                if (this.age > this.ageLimit) this.despawn();
+            }
+
+            despawn() {
+                obstacles.splice(obstacles.indexOf(this), 1);
+            }
+        }
+
+        class Food {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = 5;
+            }
+
+            despawn() {
+                foods.splice(foods.indexOf(this), 1);
+            }
+        }
+
+        class Threat {
+            constructor(x, y, target) {
+                this.x = x;
+                this.y = y;
+                this.size = 7;
+                this.speed = 2;
+                this.health = 30; // Health for the threat to allow combat interaction
+                this.target = target;
+            }
+
+            move() {
+                if (!this.target) return;
+                const dx = this.target.x - this.x;
+                const dy = this.target.y - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                this.x += (dx / dist) * this.speed;
+                this.y += (dy / dist) * this.speed;
+
+                if (dist < this.size) {
+                    this.target.health -= 20; 
+                    this.despawn();
                 }
             }
-        }
 
-        stayInBounds() {
-            if (this.position.x < -40 || this.position.x > 40) this.direction.x *= -1;
-            if (this.position.y < -40 || this.position.y > 40) this.direction.y *= -1;
-        }
-    }
-
-    class Threat {
-        constructor() {
-            this.position = new THREE.Vector3(Math.random() * 80 - 40, Math.random() * 80 - 40, 0);
-            this.mesh = new THREE.Mesh(
-                new THREE.SphereGeometry(0.5, 16, 16),
-                new THREE.MeshBasicMaterial({ color: 0xff0000 })
-            );
-            scene.add(this.mesh);
-        }
-
-        updatePosition() {
-            const closestAgent = agents.reduce((closest, agent) => {
-                const distance = this.position.distanceTo(agent.position);
-                return distance < closest.distance ? { agent, distance } : closest;
-            }, { agent: null, distance: Infinity });
-
-            if (closestAgent.agent && closestAgent.distance < 20 * attentionScale) {
-                const direction = new THREE.Vector3(
-                    closestAgent.agent.position.x - this.position.x,
-                    closestAgent.agent.position.y - this.position.y,
-                    0
-                ).normalize();
-                this.position.add(direction.multiplyScalar(0.05));
+            despawn() {
+                threats.splice(threats.indexOf(this), 1);
             }
-
-            this.mesh.position.copy(this.position);
         }
-    }
 
-    function addEnergySource() {
-        const geometry = new THREE.SphereGeometry(0.3, 16, 16);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        const energySource = new THREE.Mesh(geometry, material);
+        const agents = Array.from({ length: agentCount }, () => new Agent(Math.random() * canvas.width, Math.random() * canvas.height));
+        const obstacles = Array.from({ length: obstacleCount }, () => new Obstacle(Math.random() * canvas.width, Math.random() * canvas.height, 300));
+        let foods = [new Food(Math.random() * canvas.width, Math.random() * canvas.height)];
+        let threats = Array.from({ length: threatCount }, () => new Threat(Math.random() * canvas.width, Math.random() * canvas.height, agents[Math.floor(Math.random() * agents.length)]));
 
-        energySource.position.set(Math.random() * 80 - 40, Math.random() * 80 - 40, 0);
-        scene.add(energySource);
-        energySources.push({ mesh: energySource, position: energySource.position });
-    }
+        function updateSimulation() {
+            agents.forEach(agent => {
+                agent.move();
+                if (agent.health <= 0) agents.splice(agents.indexOf(agent), 1);
+                if (Math.random() < agent.reproductionRate) {
+                    const offspring = agent.reproduce();
+                    if (offspring) agents.push(offspring);
+                }
+                threats.forEach(threat => agent.engageThreat(threat));
+            });
 
-    function addThreat() {
-        const threat = new Threat();
-        threats.push(threat);
-    }
+            threats.forEach(threat => threat.move());
+            obstacles.forEach(obstacle => obstacle.update());
 
-    function addAgent() {
-        const agent = new QLearningAgent(agents.length, agentSpeed);
-        agents.push(agent);
-    }
+            if (foods.length < 5) foods.push(new Food(Math.random() * canvas.width, Math.random() * canvas.height));
+            if (threats.length < threatCount) threats.push(new Threat(Math.random() * canvas.width, Math.random() * canvas.height, agents[Math.floor(Math.random() * agents.length)]));
 
-    function animate() {
-        requestAnimationFrame(animate);
-        agents.forEach(agent => agent.updatePosition());
-        threats.forEach(threat => threat.updatePosition());
-        renderer.render(scene, camera);
-    }
+            render();
+            requestAnimationFrame(updateSimulation);
+        }
 
-    initScene();
-    for (let i = 0; i < 10; i++) addAgent();
-    for (let i = 0; i < 5; i++) addThreat();
-    for (let i = 0; i < 5; i++) addEnergySource();
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    animate();
+            agents.forEach(agent => {
+                ctx.fillStyle = "blue";
+                ctx.beginPath();
+                ctx.arc(agent.x, agent.y, agent.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
 
-    document.getElementById("agentSpeed").addEventListener("input", e => agentSpeed = parseFloat(e.target.value));
-    document.getElementById("attentionScale").addEventListener("input", e => attentionScale = parseFloat(e.target.value));
-    document.getElementById("resetSimulation").addEventListener("click", () => location.reload());
-</script>
+            obstacles.forEach(obstacle => {
+                ctx.fillStyle = "grey";
+                ctx.beginPath();
+                ctx.arc(obstacle.x, obstacle.y, obstacle.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            foods.forEach(food => {
+                ctx.fillStyle = "green";
+                ctx.beginPath();
+                ctx.arc(food.x, food.y, food.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            threats.forEach(threat => {
+                ctx.fillStyle = "red";
+                ctx.beginPath();
+                ctx.arc(threat.x, threat.y, threat.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function resetSimulation() {
+            agents.splice(0, agents.length, ...Array.from({ length: agentCount }, () => new Agent(Math.random() * canvas.width, Math.random() * canvas.height)));
+            obstacles.splice(0, obstacles.length, ...Array.from({ length: obstacleCount }, () => new Obstacle(Math.random() * canvas.width, Math.random() * canvas.height, 300)));
+            foods = [new Food(Math.random() * canvas.width, Math.random() * canvas.height)];
+            threats = Array.from({ length: threatCount }, () => new Threat(Math.random() * canvas.width, Math.random() * canvas.height, agents[Math.floor(Math.random() * agents.length)]));
+        }
+
+        document.getElementById("speedSlider").addEventListener("input", (e) => {
+            agents.forEach(agent => agent.speed = parseFloat(e.target.value));
+        });
+
+        updateSimulation();
+    </script>
 </body>
 </html>
