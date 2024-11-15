@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Enhanced Multi-Agent Simulation with Threat Combat</title>
+    <title>Enhanced Multi-Agent Simulation with Dynamic Obstacles and Threats</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #fafafa; margin: 0; overflow: hidden; }
         #controls { position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(0, 0, 0, 0.7); color: white; padding: 10px; border-radius: 5px; }
@@ -24,11 +24,12 @@
         canvas.height = window.innerHeight;
 
         // Simulation settings
-        const agentCount = 25; 
+        const agentCount = 25;
         const obstacleCount = 50;
-        const threatCount = 10; // Increased threat count
+        const threatCount = 10;
         const foodRespawnRate = 5000;
-        const threatRespawnRate = 7000;
+        const threatRespawnRate = 5000;  // Increased threat respawn speed
+        const obstacleSpawnRate = 5000;  // Increased obstacle respawn speed
         const agentAttributes = {
             maxSpeed: 5,
             maxHealth: 120,
@@ -46,15 +47,16 @@
                 this.speed = Math.random() * agentAttributes.maxSpeed;
                 this.reproductionRate = agentAttributes.reproductionRate;
                 this.attentionScale = dynamicAttentionScale;
-                this.qTable = {}; 
+                this.qTable = {};
             }
 
             move() {
                 this.x += (Math.random() - 0.5) * this.speed;
                 this.y += (Math.random() - 0.5) * this.speed;
 
-                if (this.x < 0 || this.x > canvas.width) this.x = Math.max(0, Math.min(canvas.width, this.x));
-                if (this.y < 0 || this.y > canvas.height) this.y = Math.max(0, Math.min(canvas.height, this.y));
+                // Border limits
+                this.x = Math.max(0, Math.min(canvas.width, this.x));
+                this.y = Math.max(0, Math.min(canvas.height, this.y));
             }
 
             reproduce() {
@@ -113,7 +115,7 @@
                 this.y = y;
                 this.size = 7;
                 this.speed = 2;
-                this.health = 30; // Health for the threat to allow combat interaction
+                this.health = 30;
                 this.target = target;
             }
 
@@ -137,9 +139,17 @@
         }
 
         const agents = Array.from({ length: agentCount }, () => new Agent(Math.random() * canvas.width, Math.random() * canvas.height));
-        const obstacles = Array.from({ length: obstacleCount }, () => new Obstacle(Math.random() * canvas.width, Math.random() * canvas.height, 300));
+        let obstacles = Array.from({ length: obstacleCount }, () => new Obstacle(Math.random() * canvas.width, Math.random() * canvas.height, 300));
         let foods = [new Food(Math.random() * canvas.width, Math.random() * canvas.height)];
         let threats = Array.from({ length: threatCount }, () => new Threat(Math.random() * canvas.width, Math.random() * canvas.height, agents[Math.floor(Math.random() * agents.length)]));
+
+        function spawnNewObstacle() {
+            obstacles.push(new Obstacle(Math.random() * canvas.width, Math.random() * canvas.height, 300));
+        }
+
+        function spawnNewThreat() {
+            threats.push(new Threat(Math.random() * canvas.width, Math.random() * canvas.height, agents[Math.floor(Math.random() * agents.length)]));
+        }
 
         function updateSimulation() {
             agents.forEach(agent => {
@@ -156,7 +166,7 @@
             obstacles.forEach(obstacle => obstacle.update());
 
             if (foods.length < 5) foods.push(new Food(Math.random() * canvas.width, Math.random() * canvas.height));
-            if (threats.length < threatCount) threats.push(new Threat(Math.random() * canvas.width, Math.random() * canvas.height, agents[Math.floor(Math.random() * agents.length)]));
+            if (threats.length < threatCount) spawnNewThreat();
 
             render();
             requestAnimationFrame(updateSimulation);
@@ -204,6 +214,9 @@
         document.getElementById("speedSlider").addEventListener("input", (e) => {
             agents.forEach(agent => agent.speed = parseFloat(e.target.value));
         });
+
+        setInterval(spawnNewObstacle, obstacleSpawnRate);
+        setInterval(spawnNewThreat, threatRespawnRate);
 
         updateSimulation();
     </script>
