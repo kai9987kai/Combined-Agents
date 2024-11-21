@@ -53,19 +53,38 @@ BETA SCRIPT
 
 This is an advanced, innovative, and fast multi-agent simulation that integrates the latest advancements in environmental AI research and AI environment bots. Explore a dynamic ecosystem where AI agents interact with the environment, complete sustainability-focused tasks, adapt to threats, and demonstrate intelligent behaviors.
 
-Features:
+Agent Features:
 
-Realistic Physics and Movement: Enhanced agent movements with obstacle avoidance and boundary constraints.
+Adaptive Decision-Making: Agents intelligently prioritize actions such as avoiding threats, completing environmental tasks, and seeking resources based on their sustainability awareness levels.
 
-Advanced Decision-Making: Agents prioritize tasks, avoid threats, seek resources, and adapt based on environmental factors.
+Realistic Movement and Navigation: Agents exhibit smooth, physics-based movement with obstacle avoidance, ensuring realistic interactions within the environment.
 
-Multi-Agent Interactions: Experience cooperative and competitive behaviors among agents in a shared environment.
+Sustainability Awareness: Each agent has a sustainability awareness attribute that influences its likelihood to engage in environmental tasks, promoting eco-friendly behaviors.
 
-Dynamic Environmental Tasks: Engage with sustainability-focused objectives that influence agent behaviors.
+Health Management: Agents have health attributes that deplete over time, requiring them to find food or complete tasks to replenish health, simulating survival instincts.
 
-Real-Time Monitoring: Observe the simulation with explainable AI overlays and interactive controls.
+Threat Response: Agents detect and respond to threats by strategically moving away from danger, showcasing advanced threat avoidance behaviors.
 
-Customizable Settings: Adjust agent speed, threat aggressiveness, and create new environmental tasks on the fly.
+Obstacle Interaction: Agents navigate around obstacles, demonstrating pathfinding capabilities and enhancing the complexity of the simulation.
+
+Multi-Agent Coordination: Experience cooperative behaviors as agents interact with each other to achieve common goals, reflecting social dynamics and teamwork.
+
+Simulation Features:
+
+Dynamic Environmental Tasks: Engage with sustainability-focused objectives like cleaning pollution hotspots or collecting specific resources, influencing agent behaviors and environmental conditions.
+
+Advanced Threat Mechanics: Intelligent threats target agents, requiring them to adapt their strategies for survival and promoting a challenging environment.
+
+Real-Time Monitoring and Explainable AI Overlays: Observe agent decisions and actions with visual explanations, enhancing understanding of AI behaviors and decision-making processes.
+
+Enhanced Visuals and Performance: Improved rendering and optimized simulations provide a smoother, more immersive experience.
+
+Customizable Settings:
+
+Agent Speed Control: Adjust the speed of agents to observe behaviors at different paces.
+Threat Aggressiveness Slider: Modify threat levels to increase or decrease simulation difficulty.
+Create Environmental Tasks: Dynamically add new tasks to the environment to influence agent priorities.
+
 
 How to Get Started:
 
