@@ -49,7 +49,25 @@ This project is licensed under the MIT License – see the LICENSE file for deta
 This README description gives a thorough overview of the project, its features, and how to use the simulation. Let me know if you'd like any adjustments or additional details!
 
 
+BETA SCRIPT
 
+This is an advanced, innovative, and fast multi-agent simulation that integrates the latest advancements in environmental AI research and AI environment bots. Explore a dynamic ecosystem where AI agents interact with the environment, complete sustainability-focused tasks, adapt to threats, and demonstrate intelligent behaviors.
+
+Features:
+
+Realistic Physics and Movement: Enhanced agent movements with obstacle avoidance and boundary constraints.
+Advanced Decision-Making: Agents prioritize tasks, avoid threats, seek resources, and adapt based on environmental factors.
+Multi-Agent Interactions: Experience cooperative and competitive behaviors among agents in a shared environment.
+Dynamic Environmental Tasks: Engage with sustainability-focused objectives that influence agent behaviors.
+Real-Time Monitoring: Observe the simulation with explainable AI overlays and interactive controls.
+Customizable Settings: Adjust agent speed, threat aggressiveness, and create new environmental tasks on the fly.
+How to Get Started:
+
+Access the simulation here or download the latest version from our repository.
+Use the in-simulation controls to adjust settings and create tasks.
+Observe how agents interact and adapt within the environment.
+Provide feedback and share your experiences in the community channel.
+Join the Community: Connect with other users, share your insights, and contribute to the development of the simulation. Your feedback is invaluable in helping us improve and refine the AI Environmental Simulation.
 
 
 
