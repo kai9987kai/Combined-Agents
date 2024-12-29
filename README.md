@@ -1,97 +1,90 @@
-Enhanced Multi-Agent Simulation with Quantum-Inspired Decision-Making
-This project presents an innovative multi-agent simulation framework that integrates quantum-inspired decision-making, evolutionary behavior, dynamic attention mechanisms, and real-time interaction with a dynamic environment. The agents in this simulation are capable of evolving, interacting with each other and their environment, and making quantum-inspired decisions for optimal survival and reproduction.
+adaptive_simulation_controls.html
+Description:
+This file demonstrates a dynamic multi-agent simulation environment with user-controllable parameters. Features include adjustable agent speeds and threat aggressiveness, a live event log for simulation updates, and real-time performance metrics like FPS and step time. Designed as a foundational template for adaptive control in simulations.
 
-The simulation features multiple agents competing for resources, dynamic obstacles, threats that target agents, and food sources that spawn and provide nutrients. As time passes, the environment evolves with new obstacles and threats, all governed by genetic-based improvements such as agent size, speed, health, and energy consumption.
+Key Features:
 
-Key Features
-1. Multi-Agent Interactions
-A group of agents (bots) in a simulated environment where each agent has unique behaviors influenced by genetic algorithms, dynamic attention, and quantum decision-making.
-Each agent adapts, evolves, and interacts with the environment and other agents, with reproduction mechanisms that produce offspring with evolutionary improvements.
-2. Quantum-Inspired Decision-Making
-Agents make decisions based on quantum-inspired randomness, using a quantum decision-making layer to enhance their decision processes.
-Quantum randomness is used to determine agent actions, creating variability and adaptability in the simulation, while reinforcement learning principles are applied to improve decision accuracy over time.
-3. Dynamic Attention Mechanism
-Agents adjust their attention scale dynamically based on their environment and state, allowing them to focus more on nearby threats, food, or obstacles.
-The attention scale is controlled in real-time through a UI slider, allowing for experimentation with different levels of agent awareness.
-4. Evolutionary Behavior
-Agents evolve over time based on their survival and reproduction success. Genetic algorithms are used to determine which traits are passed down to offspring, including size, speed, health, and energy consumption.
-The reproduction rate is adjustable, and agents undergo mutations to introduce variation into the population.
-5. Real-Time Interaction with the Environment
-Dynamic obstacles, food sources, and threats spawn and interact with agents. Obstacles respawn and move over time, while threats target and attack agents, influencing their health.
-Food sources provide nutrition, and once consumed, they respawn elsewhere in the environment.
-Agents must avoid obstacles, fight threats, and gather food for survival.
-6. Threats and Combat
-Threats actively seek out and engage with agents. Threats have health and can be defeated by agents through combat.
-Agents engage in combat with threats, damaging them when in close proximity. If the threat's health reaches zero, it is despawned.
-Threats respawn over time and are more aggressive the longer they are active.
-7. Real-Time UI Controls
-A control panel allows users to interact with and modify key parameters of the simulation:
-Agent Speed Control: Real-time adjustment of agent speed.
-Simulation Reset: Reset the entire simulation, restoring the environment and agents to their initial state.
-8. Environment Evolution
-The environment changes dynamically, with new obstacles and threats continuously spawned throughout the simulation.
-The spawn rates for threats and obstacles increase over time, keeping the agents engaged and adaptive.
-How to Use
-Start the simulation by opening the index.html file in a browser.
-Adjust agent speed using the Agent Speed slider in the control panel.
-Use the Reset Simulation button to reset the agents and environment to their initial states.
-Watch as agents evolve, interact with the environment, and make quantum-inspired decisions.
-Future Improvements
-Enhanced Quantum Decision Layer: Integrate actual quantum computing frameworks like Qiskit to further improve decision-making processes.
-Multiplayer: Enable real-time interactions between multiple users controlling agents.
-Advanced Agent Evolution: Incorporate more complex genetic algorithms for agent traits, improving adaptability in more complex environments.
-Contributing
-If you would like to contribute to this project, please feel free to fork this repository, make changes, and submit pull requests.
+Adjustable agent speed and threat aggression via sliders.
+Real-time performance monitoring (FPS, simulation step time).
+Event log for tracking significant simulation events.
+Minimalistic design with responsive resizing.
+ecosystem_population_metrics.html
+Description:
+A robust ecosystem simulator that tracks population metrics for plants, herbivores, and carnivores. Includes interactive controls to adjust population counts and a graphical representation of species distributions. This file is ideal for exploring predator-prey dynamics and simulating ecosystem changes over time.
 
-License
-This project is licensed under the MIT License – see the LICENSE file for details.
+Key Features:
 
-This README description gives a thorough overview of the project, its features, and how to use the simulation. Let me know if you'd like any adjustments or additional details!
+Population metrics visualization through bar graphs.
+Adjustable population sizes for plants, herbivores, and carnivores.
+Weather simulation with temperature and precipitation changes.
+Dynamic reproduction, growth, and predation behaviors.
+active_learning_agents.html
+Description:
+A cutting-edge simulation file featuring agents equipped with neural networks for active learning. The agents use pre-training and on-the-fly data augmentation to adapt to environmental challenges. This simulation serves as a showcase for integrating machine learning models in real-time environments.
 
+Key Features:
 
-BETA SCRIPT
+Agents with pre-trained neural networks built using TensorFlow.js.
+Real-time learning through environmental interactions and data augmentation.
+Supports dynamic decision-making using a transformation and voting mechanism.
+Fully integrated event log for monitoring agent behavior.
+dual_nn_adaptive_simulation.html
+Description:
+This simulation introduces dual neural network architecture to optimize agent behavior in dynamic environments. Features include seasonal changes, circadian rhythm effects, and an interactive scoreboard. The system is designed for adaptive simulations with complex environmental variables.
 
-This is an advanced, innovative, and fast multi-agent simulation that integrates the latest advancements in environmental AI research and AI environment bots. Explore a dynamic ecosystem where AI agents interact with the environment, complete sustainability-focused tasks, adapt to threats, and demonstrate intelligent behaviors.
+Key Features:
 
-Agent Features:
+Dual neural network integration for agents.
+Seasonal simulation with day-night cycles and circadian adjustments.
+Global scoreboard tracking agent survival and task completion.
+Expandable environmental parameters for agent behavior testing.
+offline_map_expansion.html
+Description:
+A simulation environment designed for offline use, showcasing an expanding map radius and multi-layered weather and season systems. Includes political events and adaptive agents interacting within an increasingly larger space.
 
-Adaptive Decision-Making: Agents intelligently prioritize actions such as avoiding threats, completing environmental tasks, and seeking resources based on their sustainability awareness levels.
+Key Features:
 
-Realistic Movement and Navigation: Agents exhibit smooth, physics-based movement with obstacle avoidance, ensuring realistic interactions within the environment.
+Expanding map radius as the simulation progresses.
+Offline capabilities with preloaded resources and no external requests.
+Political events influencing agent behavior and resource availability.
+Advanced visual effects like illusions and map distortions.
+q_learning_simulation.html
+Description:
+This file features a Q-learning-driven simulation environment. Agents learn through reward-based actions, adapting to threats, food, and environmental changes. Incorporates advanced Q-learning parameters and a multi-faceted environment.
 
-Sustainability Awareness: Each agent has a sustainability awareness attribute that influences its likelihood to engage in environmental tasks, promoting eco-friendly behaviors.
+Key Features:
 
-Health Management: Agents have health attributes that deplete over time, requiring them to find food or complete tasks to replenish health, simulating survival instincts.
+Q-learning agents with state-action tables and reward systems.
+Simulation of tasks, obstacles, and shelters for agent interaction.
+Dynamic agent reproduction and genetic inheritance of traits.
+Day-night cycle influencing agent behavior.
+baseline_simulation_model.html
+Description:
+A baseline simulation environment with core features such as agents, threats, food, and tasks. This file serves as an introductory template for building more complex multi-agent simulations.
 
-Threat Response: Agents detect and respond to threats by strategically moving away from danger, showcasing advanced threat avoidance behaviors.
+Key Features:
 
-Obstacle Interaction: Agents navigate around obstacles, demonstrating pathfinding capabilities and enhancing the complexity of the simulation.
+Basic agent and threat interaction mechanics.
+Adjustable parameters for agent speed and threat aggressiveness.
+Real-time performance metrics and an event log.
+Minimal setup for quick prototyping.
+comprehensive_simulation_environment.html
+Description:
+A comprehensive simulation combining Q-learning, population dynamics, and adaptive behavior in a unified environment. This file showcases the full spectrum of agent behaviors, environmental variables, and dynamic learning processes.
 
-Multi-Agent Coordination: Experience cooperative behaviors as agents interact with each other to achieve common goals, reflecting social dynamics and teamwork.
+Key Features:
 
-Simulation Features:
+Integration of Q-learning with real-time agent decision-making.
+Ecosystem-level simulation with plants, threats, food, and shelters.
+Multi-layered agent interactions with tasks and reproduction.
+Advanced logging and visualization for in-depth analysis.
+multi_layered_ai_simulation.html
+Description:
+An advanced simulation featuring multi-layered neural networks with quantum-inspired elements. Agents interact with threats and food sources while optimizing behavior through pre-trained models.
 
-Dynamic Environmental Tasks: Engage with sustainability-focused objectives like cleaning pollution hotspots or collecting specific resources, influencing agent behaviors and environmental conditions.
+Key Features:
 
-Advanced Threat Mechanics: Intelligent threats target agents, requiring them to adapt their strategies for survival and promoting a challenging environment.
-
-Real-Time Monitoring and Explainable AI Overlays: Observe agent decisions and actions with visual explanations, enhancing understanding of AI behaviors and decision-making processes.
-
-Enhanced Visuals and Performance: Improved rendering and optimized simulations provide a smoother, more immersive experience.
-
-Customizable Settings:
-
-Agent Speed Control: Adjust the speed of agents to observe behaviors at different paces.
-Threat Aggressiveness Slider: Modify threat levels to increase or decrease simulation difficulty.
-Create Environmental Tasks: Dynamically add new tasks to the environment to influence agent priorities.
-
-
-How to Get Started:
-
-Access the simulation here or download the latest version from our repository.
-Use the in-simulation controls to adjust settings and create tasks.
-Observe how agents interact and adapt within the environment.
-Provide feedback and share your experiences in the community channel.
-Join the Community: Connect with other users, share your insights, and contribute to the development of the simulation. Your feedback is invaluable in helping us improve and refine the AI Environmental Simulation.
-
-
+Neural networks with quantum-inspired hidden layers.
+Pre-trained agent models for enhanced decision-making.
+Real-time energy management and environmental sensing.
+Dynamic interactions with food and threats influencing survival rates.
